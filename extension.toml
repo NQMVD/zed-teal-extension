@@ -1,0 +1,11 @@
+id = "teal"
+name = "Teal"
+version = "0.1.0"
+schema_version = 1
+authors = ["Noah <noah@stardive.space>"]
+description = "Teal language support for Zed"
+repository = "https://github.com/teal-language/zed-teal"
+
+[grammars.teal]
+repository = "https://github.com/euclidianAce/tree-sitter-teal"
+rev = "05d276e737055e6f77a21335b7573c9d3c091e2f"

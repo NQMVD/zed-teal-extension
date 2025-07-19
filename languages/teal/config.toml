@@ -1,0 +1,26 @@
+name = "Teal"
+grammar = "teal"
+path_suffixes = ["tl"]
+line_comments = ["-- "]
+block_comments = [["--[[", "]]"]]
+tab_size = 4
+hard_tabs = false
+
+# Bracket configuration
+brackets = [
+  { start = "{", end = "}", close = true, newline = true },
+  { start = "[", end = "]", close = true, newline = false },
+  { start = "(", end = ")", close = true, newline = false },
+  { start = "\"", end = "\"", close = true, newline = false },
+  { start = "'", end = "'", close = true, newline = false },
+]
+
+# Auto-closing pairs
+autoclose_before = ")]},;: \t\n"
+
+# Indentation rules based on VSCode configuration
+[indent]
+# Increase indent after these patterns
+increase_indent_pattern = "((^\\s*|(\\b(local|global)\\b\\s*)|=\\s*)\\b(function)\\b((?!\\b(end)\\b).)*$)|(((\\b(else|then|do|repeat|record|enum)\\b((?!\\b(end|until)\\b).)*)|(\\{\\s*))$)"
+# Decrease indent for these patterns  
+decrease_indent_pattern = "^\\s*((\\b(elseif|else|end|until)\\b)|(\\})|(\\)))"
