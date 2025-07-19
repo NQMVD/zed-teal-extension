@@ -26,7 +26,8 @@ impl zed::Extension for TealExtension {
 
         // Second priority: Check if we're in the project directory with the local language server
         let root_path = worktree.root_path();
-        let project_teal_ls_path = format!("{}/teal-language-server/bin/teal-language-server", root_path);
+        let project_teal_ls_path =
+            format!("{root_path}/teal-language-server/bin/teal-language-server");
         if std::path::Path::new(&project_teal_ls_path).exists() {
             return Ok(zed::Command {
                 command: project_teal_ls_path,
@@ -46,15 +47,6 @@ impl zed::Extension for TealExtension {
                     "--log-mode=by_proj_path".to_string(),
                     "--verbose=false".to_string(),
                 ],
-                env: Default::default(),
-            });
-        }
-
-        // Fallback: Use Lua language server if available
-        if let Some(lua_ls_path) = worktree.which("lua-language-server") {
-            return Ok(zed::Command {
-                command: lua_ls_path,
-                args: vec![],
                 env: Default::default(),
             });
         }

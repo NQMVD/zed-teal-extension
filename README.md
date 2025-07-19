@@ -1,127 +1,53 @@
 # Teal Extension for Zed
 
-A Zed extension that provides language support for [Teal](https://github.com/teal-language/tl), a typed dialect of Lua.
+A Zed extension that provides language support for [Teal](https://github.com/teal-language/tl).
 
 ## Features
 
-- **Syntax Highlighting**: Full syntax highlighting for Teal language constructs including:
-  - Keywords (`local`, `global`, `record`, `interface`, `enum`, etc.)
-  - Types and type annotations
-  - Functions and methods
-  - Comments and strings
-  - Operators and punctuation
-
-- **Tree-sitter Integration**: Uses the official [tree-sitter-teal](https://github.com/euclidianAce/tree-sitter-teal) grammar for accurate parsing
-
-- **Code Structure**: 
-  - Bracket matching for `()`, `[]`, `{}`, and quotes
-  - Auto-indentation for functions, control structures, and blocks
-  - Code outline showing functions, records, interfaces, and enums
-
-- **File Association**: Automatically recognizes `.tl` files as Teal
-
-## Installation
-
-### From Zed Extensions
-
-1. Open Zed
-2. Press `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux/Windows)
-3. Type "Extensions" and select "Extensions: Install Extensions"
-4. Search for "Teal" and install
-
-### Development Installation
-
-1. Clone this repository
-2. Open Zed
-3. Press `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux/Windows)
-4. Type "Extensions" and select "Extensions: Install Dev Extension"
-5. Select the cloned directory
-
-## Requirements
-
-For full Teal development experience, install the Teal compiler:
-
-```bash
-luarocks install tl
-```
+- [x] File Association: Automatically recognizes `.tl` files as Teal
+- [ ] File Icons
+- [x] Syntax Highlighting based on the [VSCode Teal Extension](https://github.com/teal-language/vscode-teal)
+- [x] Tree-sitter Integration using [tree-sitter-teal](https://github.com/euclidianAce/tree-sitter-teal)
+- [ ] LSP support via [Teal Language Server](https://github.com/teal-language/teal-language-server)
+- [ ] Auto Installation of the `teal-language-server`
+- [ ] Formatting?
 
 ## Language Server Support
 
-This extension includes full Language Server Protocol (LSP) integration with the [Teal Language Server](https://github.com/teal-language/teal-language-server), providing:
+The LSP support isn't perfect yet, the original VSCode extension didn't have it, so this part has to be done from scratch.
+Currently, there is instances where it just crashes while not saying why.
+The diagnostics are also not properly formatted, but still useful.
 
-- **IntelliSense**: Auto-completion for variables, functions, and types
-- **Diagnostics**: Real-time error checking and type validation
-- **Go-to-Definition**: Navigate to function and type definitions
-- **Hover Information**: Type information on hover
-- **Signature Help**: Function parameter hints
-
-### Language Server Installation
-
-The extension will automatically detect and use the Teal language server if available. Install it via:
-
-```bash
-# Via LuaRocks (recommended)
+Currently the `teal-language-server` has to be installed separately, the easiest way is via luarocks:
+```sh
 luarocks install teal-language-server
-
-# Or build from source
-git clone https://github.com/teal-language/teal-language-server
-cd teal-language-server
-./scripts/setup_local_luarocks.sh
-./scripts/generate_lua.sh
 ```
+I will look at the Lua extention to see how to install it automatically soon.
 
-The extension will look for the language server in the following order:
-1. `teal-language-server` in PATH
-2. Local project installation at `teal-language-server/bin/teal-language-server`
-3. Local lua_modules installation
-4. Falls back to Lua language server if available
+## Formatting
+
+There is literally no formatter that supports Teal out there and i don't see myself writing one by hand right now.
+If i feel like it at some point, i will look at stylua to check if teal support is somewhat easy and will probably just tell claude to do it.
+If it works. i will try to also make it work with helix, for those who are interested.
+
+The [tealfmt](https://github.com/joe-p/tealfmt) project is a formatter for a different Teal, not this one.
 
 ## Snippets
 
-While Zed extensions don't currently support custom snippets, you can add Teal snippets to your global Zed configuration. Add these to your `snippets.json`:
+While Zed extensions don't currently support custom snippets, you can add create custom Snippets separately. Check the [docs](https://zed.dev/docs/snippets) for more information.
 
-```json
-{
-  "teal": {
-    "req": {
-      "prefix": "req",
-      "body": "local ${1:name} = require(\"${2:module}\")",
-      "description": "Local require"
-    },
-    "lrec": {
-      "prefix": "lrec", 
-      "body": "local record ${1:name}\n\t$0\nend",
-      "description": "Local record definition"
-    },
-    "grec": {
-      "prefix": "grec",
-      "body": "global record ${1:name}\n\t$0\nend", 
-      "description": "Global record definition"
-    },
-    "lenu": {
-      "prefix": "lenu",
-      "body": "local enum ${1:name}\n\t\"$0\"\nend",
-      "description": "Local enum definition"
-    },
-    "genu": {
-      "prefix": "genu",
-      "body": "global enum ${1:name}\n\t\"$0\"\nend",
-      "description": "Global enum definition"
-    }
-  }
-}
-```
+## Configuration
 
-## Contributing
+There are no configurations because the LSP doesn't have any.
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
-
-## License
-
-This extension is released under the MIT License.
-
-## Related Projects
+## Sources
 
 - [Teal Language](https://github.com/teal-language/tl) - The Teal compiler and language
 - [tree-sitter-teal](https://github.com/euclidianAce/tree-sitter-teal) - Tree-sitter grammar for Teal
 - [VSCode Teal Extension](https://github.com/teal-language/vscode-teal) - The original VSCode extension
+
+## Thoughts
+
+This extension is not a passion fuelled project like my other ones, i needed syntax highlighting so i quickly created an extension mostly using ai. Then i thought adding LSP wouldn't be so hard...
+The tooling for teal is pretty poor, as mentioned earlier there's not even a formatter.
+I will keep an eye on it, but don't expect any big changes or innovations here.
