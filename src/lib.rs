@@ -4,7 +4,6 @@ struct TealExtension;
 
 impl zed::Extension for TealExtension {
     fn new() -> Self {
-        println!("🔧 TealExtension::new() called - extension is being initialized");
         Self
     }
 
@@ -13,12 +12,46 @@ impl zed::Extension for TealExtension {
         _language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
-        println!("🔧 TealExtension::language_server_command() called for language server: {:?}", _language_server_id);
-        
-        // For now, we'll use the Lua language server as a fallback
-        // since Teal is a typed dialect of Lua
+        // First priority: Look for the dedicated Teal language server
+        if let Some(teal_ls_path) = worktree.which("teal-language-server") {
+            return Ok(zed::Command {
+                command: teal_ls_path,
+                args: vec![
+                    "--log-mode=by_proj_path".to_string(),
+                    "--verbose=false".to_string(),
+                ],
+                env: Default::default(),
+            });
+        }
+
+        // Second priority: Check if we're in the project directory with the local language server
+        let root_path = worktree.root_path();
+        let project_teal_ls_path = format!("{}/teal-language-server/bin/teal-language-server", root_path);
+        if std::path::Path::new(&project_teal_ls_path).exists() {
+            return Ok(zed::Command {
+                command: project_teal_ls_path,
+                args: vec![
+                    "--log-mode=by_proj_path".to_string(),
+                    "--verbose=false".to_string(),
+                ],
+                env: Default::default(),
+            });
+        }
+
+        // Third priority: Try lua_modules installation (from source build)
+        if let Some(lua_modules_teal_ls) = worktree.which("lua_modules/bin/teal-language-server") {
+            return Ok(zed::Command {
+                command: lua_modules_teal_ls,
+                args: vec![
+                    "--log-mode=by_proj_path".to_string(),
+                    "--verbose=false".to_string(),
+                ],
+                env: Default::default(),
+            });
+        }
+
+        // Fallback: Use Lua language server if available
         if let Some(lua_ls_path) = worktree.which("lua-language-server") {
-            println!("🔧 Found lua-language-server at: {}", lua_ls_path);
             return Ok(zed::Command {
                 command: lua_ls_path,
                 args: vec![],
@@ -26,16 +59,7 @@ impl zed::Extension for TealExtension {
             });
         }
 
-        // Try to find tl compiler for basic functionality
-        if let Some(_tl_path) = worktree.which("tl") {
-            println!("🔧 Found tl compiler at: {}", _tl_path);
-            // Note: tl doesn't have LSP mode, but we can still reference it
-            // for potential future integration or custom LSP wrapper
-            return Err("Teal language server not yet implemented. Consider using Lua LSP as fallback.".to_string());
-        }
-
-        println!("🔧 No language server found for Teal");
-        Err("Neither Teal compiler 'tl' nor Lua language server found. Please install via 'luarocks install tl' or install lua-language-server.".to_string())
+        Err("Teal language server not found. Please install via 'luarocks install teal-language-server' or build from source.".to_string())
     }
 
     fn language_server_initialization_options(
@@ -43,7 +67,7 @@ impl zed::Extension for TealExtension {
         _language_server_id: &zed::LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> zed::Result<Option<zed::serde_json::Value>> {
-        println!("🔧 TealExtension::language_server_initialization_options() called");
+        // Teal language server doesn't require special initialization options
         Ok(None)
     }
 
@@ -52,7 +76,7 @@ impl zed::Extension for TealExtension {
         _language_server_id: &zed::LanguageServerId,
         _worktree: &zed::Worktree,
     ) -> zed::Result<Option<zed::serde_json::Value>> {
-        println!("🔧 TealExtension::language_server_workspace_configuration() called");
+        // Teal language server uses tlconfig.lua for configuration
         Ok(None)
     }
 }

@@ -6,6 +6,11 @@ block_comments = [["--[[", "]]"]]
 tab_size = 4
 hard_tabs = false
 
+# Language server configuration
+[language_servers.teal-language-server]
+name = "teal-language-server"
+languages = ["Teal"]
+
 # Bracket configuration
 brackets = [
   { start = "{", end = "}", close = true, newline = true },

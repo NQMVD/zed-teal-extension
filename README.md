@@ -47,9 +47,34 @@ luarocks install tl
 
 ## Language Server Support
 
-Currently, this extension provides syntax highlighting and basic language features. Language server integration (for features like IntelliSense, diagnostics, and go-to-definition) is planned for future releases.
+This extension includes full Language Server Protocol (LSP) integration with the [Teal Language Server](https://github.com/teal-language/teal-language-server), providing:
 
-As a workaround, you can use the Lua language server which provides some compatibility with Teal files.
+- **IntelliSense**: Auto-completion for variables, functions, and types
+- **Diagnostics**: Real-time error checking and type validation
+- **Go-to-Definition**: Navigate to function and type definitions
+- **Hover Information**: Type information on hover
+- **Signature Help**: Function parameter hints
+
+### Language Server Installation
+
+The extension will automatically detect and use the Teal language server if available. Install it via:
+
+```bash
+# Via LuaRocks (recommended)
+luarocks install teal-language-server
+
+# Or build from source
+git clone https://github.com/teal-language/teal-language-server
+cd teal-language-server
+./scripts/setup_local_luarocks.sh
+./scripts/generate_lua.sh
+```
+
+The extension will look for the language server in the following order:
+1. `teal-language-server` in PATH
+2. Local project installation at `teal-language-server/bin/teal-language-server`
+3. Local lua_modules installation
+4. Falls back to Lua language server if available
 
 ## Snippets
 
